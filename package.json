@@ -2,11 +2,11 @@
   "name": "hello-prisma",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "file.ts",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts"
+    "start": "node dist/file.js",
+    "dev": "nodemon src/file.ts"
   },
   "keywords": [],
   "author": "",
