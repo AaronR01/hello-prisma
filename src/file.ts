@@ -7,6 +7,10 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello, world!');
 });
 
+app.get("/api/CreateUser/",(req: Request, res: Response) => {
+    res.send("okayC ").status(200)
+});
+
 app.get("/api/CreateUser/:nome",(req: Request, res: Response) => {
     const nome = req.body
     res.send("okayC "+nome).status(200)
