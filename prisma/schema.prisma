@@ -21,9 +21,10 @@ model administrador_sistema {
 
 model User {
   id Int @id @default(autoincrement())
+  email String @unique
   name String
   password String
-  telefone String
+  telefone String @unique
   
 }
 

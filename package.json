@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/file.js",
-    "dev": "nodemon src/file.ts"
+    "dev": "nodemon src/file.ts",
+    "db": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
