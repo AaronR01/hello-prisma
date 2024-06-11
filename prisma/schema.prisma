@@ -10,10 +10,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model administrador_sistema {
+  id          Int @id @default(autoincrement())
+  nome        String
+  senha       String
+  email       String
+  Telefone    String
+  fazenda     Fazenda[]
+}
+
 model User {
   id Int @id @default(autoincrement())
   name String
   password String
   telefone String
   
+}
+
+model Fazenda {
+  id Int @id @default(autoincrement())
+  nome String
+  cidade String
+  estado String
+  proprietario String
+  id_adm administrador_sistema @relation(fields: [id],references: [id])
+
+}
+
+model Lote {
+  id Int @id @default(autoincrement())
+  nome String
+}
+
+model Analise {
+  id Int @id @default(autoincrement())
 }

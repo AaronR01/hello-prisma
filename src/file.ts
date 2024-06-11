@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client'
-import { stringify } from 'querystring';
 
 const prisma = new PrismaClient()
 const app = express();
@@ -21,6 +20,7 @@ app.get("/api/CreateUser/:nome",(req: Request, res: Response) => {
 
 app.get('/publish/', async (req, res) => {
     const post = await prisma.user.create({
+
             data: {
                 name: "nome",
                 password: "senha",
@@ -29,6 +29,14 @@ app.get('/publish/', async (req, res) => {
         })
         console.log(post)
         res.send(post).status(200)
+    })
+
+    app.get('/publica/:user/:password/:telefone', async (req, res) => {
+        const { user } = req.params
+        const { password } = req.params
+        const { telefone } = req.params
+        console.log(user + password + telefone)
+        res.send(user + password + telefone).status(200)
     })
 
 app.listen(port, () => {
