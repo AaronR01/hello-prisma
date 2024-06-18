@@ -36,14 +36,16 @@ app.get('/api/login/:user/:password', async (req, res) => {
         res.send(post).status(200)
     })
 
-    app.get('/api/createUser/:user/:password/:telefone', async (req, res) => {
+    app.get('/api/createUser/:user/:password/:telefone/:email', async (req, res) => {
         const { user } = req.params
+        const { email } = req.params
         const { password } = req.params
         const { telefone } = req.params
         const hashpass = createSHA256Hash(password)
         const serverlog = await prisma.user.create({
             data: {
                 name: user,
+                email: email,
                 password: hashpass,
                 telefone: telefone,
             }
