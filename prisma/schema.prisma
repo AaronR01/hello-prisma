@@ -11,38 +11,75 @@ datasource db {
 }
 
 model administrador_sistema {
-  id          Int @id @default(autoincrement())
-  nome        String
-  senha       String
-  email       String
-  Telefone    String
-  fazenda     Fazenda[]
+  id       Int       @id @default(autoincrement())
+  nome     String
+  senha    String
+  email    String
+  Telefone String
+  fazenda  Fazenda[]
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String
-  password String
-  telefone String @unique
-  
+  id         Int     @id @default(autoincrement())
+  email      String  @unique
+  name       String
+  password   String
+  telefone   String  @unique
+  id_fazenda Fazenda @relation(fields: [id], references: [id])
 }
 
 model Fazenda {
-  id Int @id @default(autoincrement())
-  nome String
-  cidade String
-  estado String
+  id           Int                   @id @default(autoincrement())
+  nome         String
+  cidade       String
+  estado       String
   proprietario String
-  id_adm administrador_sistema @relation(fields: [id],references: [id])
+  id_adm       administrador_sistema @relation(fields: [id], references: [id])
 
+  User User[]
+}
+
+model Dieta_Lote {
+  id_lote     Int
+  lote        Lote     @relation(fields: [id_lote], references: [id])
+  id_dieta    Int
+  dieta       Dieta    @relation(fields: [id_dieta], references: [id])
+  id_alimento Int
+  alimento    Alimento @relation(fields: [id_alimento], references: [id])
+  quantidade  Float
+
+  @@id([id_lote, id_dieta, id_alimento])
+}
+
+model Dieta {
+  id         Int          @id @default(autoincrement())
+  Data       DateTime
+  dieta_Lote Dieta_Lote[]
+}
+
+model Alimento {
+  id         Int          @id @default(autoincrement())
+  Descricao  String
+  dieta_lote Dieta_Lote[]
 }
 
 model Lote {
-  id Int @id @default(autoincrement())
-  nome String
+  id                 Int          @id @default(autoincrement())
+  nome               String
+  quantidade_animais Int
+  dieta_lote         Dieta_Lote[]
+  analise            Analise[]
 }
 
 model Analise {
-  id Int @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
+  imagem        String?
+  resultado     Float
+  disposicao    String?
+  manejo        String?
+  comportamento String?
+  Clima         String?
+  Data          DateTime?
+  id_lote       Int
+  lote          Lote      @relation(fields: [id_lote], references: [id])
 }

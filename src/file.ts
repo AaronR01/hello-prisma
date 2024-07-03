@@ -25,34 +25,51 @@ app.get("/api/CreateUser/:nome",(req: Request, res: Response) => {
     res.send("okay"+nome).status(200)
 });
 
-app.get('/api/login/:user/:password', async (req, res) => {
-    const {user} = req.params
+app.get('/api/login/:login/:password', async (req, res) => {
+    const {login} = req.params
     const {password} = req.params
-    
-    const post = await prisma.user.findMany({
+    const post = await prisma.user.findUnique({
+        where: {
+            email: login
+        }})
+    console.log(post)
+    if (post?.password == password){
+        res.send(post.id+"").status(200)
+    }
+    else {
+        res.send("Wrong password").status(406)
+    }
+})
 
+app.get('/api/fazenda/:id', async (req, res) => {
+    const {id} = req.params
+    const post = await prisma.user.findUnique({
+        where: {
+            id : parseInt(id)
+        }
+        
+        
         })
-        console.log(post)
-        res.send(post).status(200)
-    })
+    console.log(post)
+})
 
-    app.get('/api/createUser/:user/:password/:telefone/:email', async (req, res) => {
-        const { user } = req.params
-        const { email } = req.params
-        const { password } = req.params
-        const { telefone } = req.params
-        const hashpass = createSHA256Hash(password)
-        const serverlog = await prisma.user.create({
-            data: {
-                name: user,
-                email: email,
-                password: hashpass,
-                telefone: telefone,
-            }
-        })
-        console.log(serverlog)
-        res.send(serverlog).status(200)
+app.post('/api/createUser/:user/:password/:telefone/:email', async (req, res) => {
+    const { user } = req.params
+    const { email } = req.params
+    const { password } = req.params
+    const { telefone } = req.params
+    const hashpass = createSHA256Hash(password)
+    const serverlog = await prisma.user.create({
+        data: {
+            name: user,
+            email: email,
+            password: hashpass,
+            telefone: telefone,
+        }
     })
+    console.log(serverlog)
+    res.send(serverlog).status(200)
+})
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
