@@ -4,7 +4,7 @@ import * as crypto from "crypto";
 
 const prisma = new PrismaClient()
 const app = express();
-const port = 3000;
+const port = 5000;
 
 function createSHA256Hash(inputString: string) {
     const hash = crypto.createHash('sha256');

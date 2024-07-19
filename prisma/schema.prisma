@@ -67,6 +67,7 @@ model Lote {
   id                 Int          @id @default(autoincrement())
   nome               String
   quantidade_animais Int
+  tamanho Int
   dieta_lote         Dieta_Lote[]
   analise            Analise[]
 }
