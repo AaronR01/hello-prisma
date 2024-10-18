@@ -33,7 +33,7 @@ app.get('/api/login/:login/:password', async (req, res) => {
             email: login
         }})
     console.log(post)
-    if (post?.password == password){
+    if (post?.senha == password){
         res.send(post.id+"").status(200)
     }
     else {
@@ -45,7 +45,7 @@ app.get('/api/fazenda/:id', async (req, res) => {
     const {id} = req.params
     const post = await prisma.user.findUnique({
         where: {
-            id : parseInt(id)
+            id : id
         }
         
         
@@ -61,10 +61,11 @@ app.post('/api/createUser/:user/:password/:telefone/:email', async (req, res) =>
     const hashpass = createSHA256Hash(password)
     const serverlog = await prisma.user.create({
         data: {
-            name: user,
+            nome: user,
             email: email,
-            password: hashpass,
+            senha: hashpass,
             telefone: telefone,
+            eh_administrador: false,
         }
     })
     console.log(serverlog)
