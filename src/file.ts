@@ -1,77 +1,17 @@
-import express, { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client'
-import * as crypto from "crypto";
+import express from 'express';
+import userRoutes from './routes/user-routes';
+import dotenv from 'dotenv';
 
-const prisma = new PrismaClient()
+
+dotenv.config();
 const app = express();
+app.use(express.json());
+
+
+app.use('/api', userRoutes);
+
+
 const port = 5000;
-
-function createSHA256Hash(inputString: string) {
-    const hash = crypto.createHash('sha256');
-    hash.update(Buffer.from(inputString));
-    return hash.digest('hex');
-}
-
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, world!');
-});
-
-app.get("/api/CreateUser/",(req: Request, res: Response) => {
-    res.send("okay").status(200)
-});
-
-app.get("/api/CreateUser/:nome",(req: Request, res: Response) => {
-    const nome = req.body
-    res.send("okay"+nome).status(200)
-});
-
-app.get('/api/login/:login/:password', async (req, res) => {
-    const {login} = req.params
-    const {password} = req.params
-    const post = await prisma.user.findUnique({
-        where: {
-            email: login
-        }})
-    console.log(post)
-    if (post?.senha == password){
-        res.send(post.id+"").status(200)
-    }
-    else {
-        res.send("Wrong password").status(406)
-    }
-})
-
-app.get('/api/fazenda/:id', async (req, res) => {
-    const {id} = req.params
-    const post = await prisma.user.findUnique({
-        where: {
-            id : id
-        }
-        
-        
-        })
-    console.log(post)
-})
-
-app.post('/api/createUser/:user/:password/:telefone/:email', async (req, res) => {
-    const { user } = req.params
-    const { email } = req.params
-    const { password } = req.params
-    const { telefone } = req.params
-    const hashpass = createSHA256Hash(password)
-    const serverlog = await prisma.user.create({
-        data: {
-            nome: user,
-            email: email,
-            senha: hashpass,
-            telefone: telefone,
-            eh_administrador: false,
-        }
-    })
-    console.log(serverlog)
-    res.send(serverlog).status(200)
-})
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

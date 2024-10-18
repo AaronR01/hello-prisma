@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,22 +8,22 @@ datasource db {
 }
 
 model administrador_sistema {
-  id       String     @id @default(uuid())
+  id       String   @id @default(uuid())
   nome     String
   senha    String
   email    String
   telefone String
-  Fazenda  Fazenda[]
+  Fazenda  Fazenda?
 }
 
 model User {
-  id              String  @id @default(uuid())
-  email           String  @unique
-  nome            String
-  senha        String
-  telefone        String  @unique
+  id               String  @id @default(uuid())
+  email            String  @unique
+  telefone         String  @unique
   eh_administrador Boolean
-  id_fazenda      Fazenda @relation(fields: [id], references: [id])
+  nome             String
+  senha            String
+  id_fazenda       Fazenda @relation(fields: [id], references: [id])
 }
 
 model Fazenda {
@@ -36,53 +33,56 @@ model Fazenda {
   estado       String
   proprietario String
   id_adm       administrador_sistema @relation(fields: [id], references: [id])
-
-  User User[]
+  User         User?
 }
 
 model Dieta_Lote {
   id_lote     String
-  lote        Lote     @relation(fields: [id_lote], references: [id])
   id_dieta    String
-  dieta       Dieta    @relation(fields: [id_dieta], references: [id])
   id_alimento String
-  alimento    Alimento @relation(fields: [id_alimento], references: [id])
   quantidade  Float
+  alimento    Alimento @relation(fields: [id_alimento], references: [id])
+  dieta       Dieta    @relation(fields: [id_dieta], references: [id])
+  lote        Lote     @relation(fields: [id_lote], references: [id])
 
   @@id([id_lote, id_dieta, id_alimento])
+  @@index([id_alimento], map: "Dieta_Lote_id_alimento_fkey")
+  @@index([id_dieta], map: "Dieta_Lote_id_dieta_fkey")
 }
 
 model Dieta {
-  id           String                @id @default(uuid())
+  id         String       @id @default(uuid())
   data       DateTime
   Dieta_Lote Dieta_Lote[]
 }
 
 model Alimento {
-  id           String                @id @default(uuid())
-  nome       String
+  id         String       @id @default(uuid())
   descricao  String
+  nome       String
   Dieta_lote Dieta_Lote[]
 }
 
 model Lote {
-  id                 String                @id @default(uuid())
+  id                 String       @id @default(uuid())
   nome               String
   quantidade_animais Int
   tamanho            Int
-  Dieta_lote         Dieta_Lote[]
   Analise            Analise[]
+  Dieta_lote         Dieta_Lote[]
 }
 
 model Analise {
-  id           String                @id @default(uuid())
+  id            String   @id @default(uuid())
   imagem        String?
   resultado     Float
   disposicao    String
   manejo        String
   comportamento String
+  id_lote       String
   clima         String
   data          DateTime
-  id_lote       String
-  lote          Lote      @relation(fields: [id_lote], references: [id])
+  lote          Lote     @relation(fields: [id_lote], references: [id])
+
+  @@index([id_lote], map: "Analise_id_lote_fkey")
 }
