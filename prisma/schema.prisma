@@ -11,25 +11,26 @@ datasource db {
 }
 
 model administrador_sistema {
-  id       Int       @id @default(autoincrement())
+  id       String     @id @default(uuid())
   nome     String
   senha    String
   email    String
-  Telefone String
-  fazenda  Fazenda[]
+  telefone String
+  Fazenda  Fazenda[]
 }
 
 model User {
-  id         Int     @id @default(autoincrement())
-  email      String  @unique
-  name       String
-  password   String
-  telefone   String  @unique
-  id_fazenda Fazenda @relation(fields: [id], references: [id])
+  id              String  @id @default(uuid())
+  email           String  @unique
+  nome            String
+  senha        String
+  telefone        String  @unique
+  eh_administrador Boolean
+  id_fazenda      Fazenda @relation(fields: [id], references: [id])
 }
 
 model Fazenda {
-  id           Int                   @id @default(autoincrement())
+  id           String                @id @default(uuid())
   nome         String
   cidade       String
   estado       String
@@ -40,11 +41,11 @@ model Fazenda {
 }
 
 model Dieta_Lote {
-  id_lote     Int
+  id_lote     String
   lote        Lote     @relation(fields: [id_lote], references: [id])
-  id_dieta    Int
+  id_dieta    String
   dieta       Dieta    @relation(fields: [id_dieta], references: [id])
-  id_alimento Int
+  id_alimento String
   alimento    Alimento @relation(fields: [id_alimento], references: [id])
   quantidade  Float
 
@@ -52,35 +53,36 @@ model Dieta_Lote {
 }
 
 model Dieta {
-  id         Int          @id @default(autoincrement())
-  Data       DateTime
-  dieta_Lote Dieta_Lote[]
+  id           String                @id @default(uuid())
+  data       DateTime
+  Dieta_Lote Dieta_Lote[]
 }
 
 model Alimento {
-  id         Int          @id @default(autoincrement())
-  Descricao  String
-  dieta_lote Dieta_Lote[]
+  id           String                @id @default(uuid())
+  nome       String
+  descricao  String
+  Dieta_lote Dieta_Lote[]
 }
 
 model Lote {
-  id                 Int          @id @default(autoincrement())
+  id                 String                @id @default(uuid())
   nome               String
   quantidade_animais Int
-  tamanho Int
-  dieta_lote         Dieta_Lote[]
-  analise            Analise[]
+  tamanho            Int
+  Dieta_lote         Dieta_Lote[]
+  Analise            Analise[]
 }
 
 model Analise {
-  id            Int       @id @default(autoincrement())
+  id           String                @id @default(uuid())
   imagem        String?
   resultado     Float
-  disposicao    String?
-  manejo        String?
-  comportamento String?
-  Clima         String?
-  Data          DateTime?
-  id_lote       Int
+  disposicao    String
+  manejo        String
+  comportamento String
+  clima         String
+  data          DateTime
+  id_lote       String
   lote          Lote      @relation(fields: [id_lote], references: [id])
 }
