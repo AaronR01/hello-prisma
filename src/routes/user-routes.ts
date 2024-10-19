@@ -30,4 +30,27 @@ router.post('/register', async (req: Request, res: Response) => {
     }
 });
 
+router.post('/registerSysAdmin', async (req: Request, res: Response) => {
+    const { email, nome, senha, telefone} = req.body;
+
+    const hashSenha = await bcrypt.hash(senha, 10);
+
+    try {
+        const user = await prisma.administrador_sistema.create({
+            data: {
+                email,
+                nome,
+                senha: hashSenha,
+                telefone,
+
+            }
+        });
+
+        res.json(user);
+    } catch (error) {
+        console.error('Erro ao registrar o usuário:', error);
+        res.status(400).json({ error: 'Ocorreu um erro!' });
+    }
+});
+
 export default router;
