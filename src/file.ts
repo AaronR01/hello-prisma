@@ -1,5 +1,6 @@
 import express from 'express';
 import userRoutes from './routes/user-routes';
+import fzdRoutes from './routes/fzd-routes';
 import dotenv from 'dotenv';
 
 
@@ -8,7 +9,9 @@ const app = express();
 app.use(express.json());
 
 
-app.use('/api', userRoutes);
+app.use('/users', userRoutes);
+
+app.use('/fzd', fzdRoutes);
 
 
 const port = 5001;
