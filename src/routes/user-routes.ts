@@ -42,20 +42,6 @@ router.post('/registerUserAdm/:id', async (req: Request, res: Response) => {
             return res.status(404).json({ error: 'Administrador não encontrado!' });
         }
 
-        const fazenda = await prisma.fazenda.create({
-            data: {
-                nome: nomeFzd,
-                cidade,
-                estado,
-                proprietario,
-                id_adm: {
-                    connect: {
-                        id: id
-                    }
-                }
-            }
-        });
-
         const hashSenha = await bcrypt.hash(senha, 10);
 
         const user = await prisma.user.create({
@@ -65,15 +51,23 @@ router.post('/registerUserAdm/:id', async (req: Request, res: Response) => {
                 senha: hashSenha,
                 telefone,
                 eh_administrador: true,
-                id_fazenda: {
-                    connect: {
-                        id: fazenda.id
+                fazenda: {
+                    create: {
+                        nome: nomeFzd,
+                        cidade,
+                        estado,
+                        proprietario,
+                        adm: {
+                            connect: {
+                                id: id
+                            }   
                     }
                 }
             }
+        }
         });
 
-        return res.status(201).json({ fazenda, user });
+        return res.status(201).json({ user });
 
     } catch (error) {
         console.error('Erro ao registrar:', error);

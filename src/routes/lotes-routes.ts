@@ -5,7 +5,8 @@ import { Router, Request, Response } from 'express';
 const router = Router();
 
 router.post('/registerLote/:id', async (req: Request, res: Response) => {
-   const { quantidade_animais, nome, tamanho} = req.body;
+   const { nome, quantidade_animais, tamanho} = req.body;
+   const { id } = req.params;
 
 
    try {
@@ -14,7 +15,11 @@ router.post('/registerLote/:id', async (req: Request, res: Response) => {
                nome,
                quantidade_animais,
                tamanho,
-               id_fazenda: req.params.id
+               fazenda: {
+                connect: {
+                    id: id
+                }
+            }
             }
        });
 
