@@ -53,7 +53,7 @@ model Dieta_Lote {
 
 model Dieta {
   id         String       @id @default(uuid())
-  data       DateTime
+  Analise   Analise[]
   Dieta_Lote Dieta_Lote[]
 }
 
@@ -85,6 +85,8 @@ model Analise {
   clima         String
   data          DateTime
   id_lote       String
+  id_dieta      String
+  Dieta         Dieta    @relation(fields: [id_dieta], references: [id])
   lote          Lote     @relation(fields: [id_lote], references: [id])
 
   @@index([id_lote], map: "Analise_id_lote_fkey")
