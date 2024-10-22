@@ -59,8 +59,8 @@ model Dieta {
 
 model Alimento {
   id         String       @id @default(uuid())
-  descricao  String
   nome       String
+  descricao  String?
   Dieta_lote Dieta_Lote[]
 }
 
