@@ -33,7 +33,8 @@ model Fazenda {
   estado       String
   proprietario String
   id_adm       administrador_sistema @relation(fields: [id], references: [id])
-  User         User?
+  Lote         Lote[]
+  User         User[]
 }
 
 model Dieta_Lote {
@@ -68,6 +69,8 @@ model Lote {
   nome               String
   quantidade_animais Int
   tamanho            Int
+  id_fazenda         String
+  fazenda            Fazenda      @relation(fields: [id_fazenda], references: [id])
   Analise            Analise[]
   Dieta_lote         Dieta_Lote[]
 }
@@ -79,9 +82,9 @@ model Analise {
   disposicao    String
   manejo        String
   comportamento String
-  id_lote       String
   clima         String
   data          DateTime
+  id_lote       String
   lote          Lote     @relation(fields: [id_lote], references: [id])
 
   @@index([id_lote], map: "Analise_id_lote_fkey")
