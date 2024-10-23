@@ -39,31 +39,29 @@ model Fazenda {
   User         User[]
 }
 
-model Dieta_Lote {
-  id_lote     String
+model Receita {
+  id          String       @id @default(uuid())
   id_dieta    String
-  id_alimento String
+  id_alimento Int
   quantidade  Float
   alimento    Alimento @relation(fields: [id_alimento], references: [id])
   dieta       Dieta    @relation(fields: [id_dieta], references: [id])
-  lote        Lote     @relation(fields: [id_lote], references: [id])
-
-  @@id([id_lote, id_dieta, id_alimento])
-  @@index([id_alimento], map: "Dieta_Lote_id_alimento_fkey")
-  @@index([id_dieta], map: "Dieta_Lote_id_dieta_fkey")
 }
 
 model Dieta {
-  id         String       @id @default(uuid())
-  Analise   Analise[]
-  Dieta_Lote Dieta_Lote[]
+  id_lote     String
+  id          String       @id @default(uuid())
+  eh_atual    Boolean
+  Analise     Analise[]
+  Receita     Receita[]
+  lote        Lote     @relation(fields: [id_lote], references: [id])
 }
 
 model Alimento {
-  id         String       @id @default(uuid())
+  id         Int     @id @default(autoincrement())
   nome       String
   descricao  String?
-  Dieta_lote Dieta_Lote[]
+  Receita    Receita[]
 }
 
 model Lote {
@@ -74,7 +72,7 @@ model Lote {
   id_fazenda         String
   fazenda            Fazenda      @relation(fields: [id_fazenda], references: [id])
   Analise            Analise[]
-  Dieta_lote         Dieta_Lote[]
+  Dieta              Dieta[]
 }
 
 model Analise {
@@ -90,6 +88,4 @@ model Analise {
   id_dieta      String
   Dieta         Dieta    @relation(fields: [id_dieta], references: [id])
   lote          Lote     @relation(fields: [id_lote], references: [id])
-
-  @@index([id_lote], map: "Analise_id_lote_fkey")
 }
