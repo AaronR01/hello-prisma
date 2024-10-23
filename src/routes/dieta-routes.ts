@@ -65,4 +65,31 @@ router.post('/updateDieta/:loteId', async (req: Request, res: Response) => {
     }
 })
 
+// Rota para a listagem de receitas de uma dieta
+router.get('/listDieta/:loteId', async (req: Request, res: Response) => {
+    const { loteId } = req.params;
+
+    const dietaAtual = await prisma.dieta.findFirst({
+        where: {
+            id_lote: loteId,
+            eh_atual: true,
+        },
+    });
+
+    if (!dietaAtual) {
+        return res.status(404).json({ error: 'Dieta não encontrada!' });
+    }
+
+    const receitas = await prisma.receita.findMany({
+        where: {
+            id_dieta: dietaAtual.id,
+        },
+        include: {
+            alimento: true,
+        },
+    });
+
+    res.json(receitas);
+})
+
 export default router;
