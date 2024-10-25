@@ -3,6 +3,7 @@ import userRoutes from './routes/user-routes';
 import dietaRoutes from './routes/dieta-routes';
 import lotesRoutes from './routes/lotes-routes';
 import alimentoRoutes from './routes/alimento-routes';
+import analiseRoutes from './routes/analise-routes';
 import dotenv from 'dotenv';
 
 
@@ -10,6 +11,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+app.use('/analise', analiseRoutes);
 
 app.use('/users', userRoutes);
 
