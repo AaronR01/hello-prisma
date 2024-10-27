@@ -4,7 +4,7 @@ import { Router, Request, Response } from 'express';
 const router = Router();
 
 // Rota para a atualização de uma receita conectando com a dieta
-router.post('/updateDieta/:loteId', async (req: Request, res: Response) => {
+router.post('/update/:loteId', async (req: Request, res: Response) => {
     const { receitas } = req.body;
     const { loteId } = req.params;
 

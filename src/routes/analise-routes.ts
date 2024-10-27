@@ -5,14 +5,15 @@ const router = Router();
 
 
 // Procura a dieta atual e cria uma análise para um lote,a imagem eh opcional como tinhamos conversado
-router.post('/create/:id', async (req: Request, res: Response) => {
-    const {id} = req.params;
+router.post('/create/:loteId', async (req: Request, res: Response) => {
+    const {loteId} = req.params;
     const {imagem, disposicao, manejo, comportamento, clima, data, resultado} = req.body;
 
     try {
         const dietaAtual = await prisma.dieta.findFirst({
             where: {
-                eh_atual: true
+            eh_atual: true,
+            id_lote: loteId
             }
         });
 
@@ -33,7 +34,7 @@ router.post('/create/:id', async (req: Request, res: Response) => {
                     connect: { id: dietaAtual.id }
                 },
                 lote: {
-                    connect: { id: id }
+                    connect: { id: loteId }
                 }
             }
         });
@@ -45,24 +46,29 @@ router.post('/create/:id', async (req: Request, res: Response) => {
 })
 
 // Lista todas as análises incluindo as receitas das dietas correspondentes, calha dar um /list para voces verem o formato json que entrega (bem rico)
-router.get('/list', async (req: Request, res: Response) => {
+router.get('/list/:loteId', async (req: Request, res: Response) => {
+    const {loteId} = req.params;
+
     try {
         const analises = await prisma.analise.findMany({
+            where: {
+                id_lote: loteId
+            },
             include: {
-            Dieta: {
-                include: {
-                Receita: {
+                Dieta: {
                     include: {
-                    alimento: {
-                        select: {
-                        nome: true
+                        Receita: {
+                            include: {
+                                alimento: {
+                                    select: {
+                                        nome: true
+                                    }
+                                }
+                            }
                         }
                     }
-                    }
-                }
-                }
-            },
-            lote: true
+                },
+                lote: true
             }
         });
 

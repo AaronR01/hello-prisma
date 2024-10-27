@@ -4,9 +4,9 @@ import { Router, Request, Response } from 'express';
 
 const router = Router();
 
-router.post('/registerLote/:id', async (req: Request, res: Response) => {
+router.post('/register/:fazendaId', async (req: Request, res: Response) => {
    const { nome, quantidade_animais, tamanho} = req.body;
-   const { id } = req.params;
+   const { fazendaId } = req.params;
 
 
    try {
@@ -17,7 +17,7 @@ router.post('/registerLote/:id', async (req: Request, res: Response) => {
                tamanho,
                fazenda: {
                 connect: {
-                    id: id
+                    id: fazendaId
                 }
             }
             }
@@ -31,9 +31,16 @@ router.post('/registerLote/:id', async (req: Request, res: Response) => {
 });
 
 
-router.get('/listLotes', async (req: Request, res: Response) => {
+router.get('/listAll/:fazendaId', async (req: Request, res: Response) => {
+
+    const { fazendaId } = req.params;
+
     try {
-        const lotes = await prisma.lote.findMany();
+        const lotes = await prisma.lote.findMany({
+            where: {
+                id_fazenda: fazendaId
+            }
+        });
         res.json(lotes);
     } catch (error) {
         console.error('Erro ao listar os lotes:', error);
@@ -41,13 +48,13 @@ router.get('/listLotes', async (req: Request, res: Response) => {
     }
 });
 
-router.get('/listLote/:id', async (req: Request, res: Response) => {
-    const { id } = req.params;
+router.get('/listLote/:loteId', async (req: Request, res: Response) => {
+    const { loteId } = req.params;
 
     try {
         const lote = await prisma.lote.findUnique({
             where: {
-                id: id
+                id: loteId
             }
         });
 

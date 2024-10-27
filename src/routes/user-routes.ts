@@ -29,13 +29,13 @@ router.post('/registerSysAdmin', async (req: Request, res: Response) => {
 
 //rota para a criação de um usuário comum que eh administrador de uma fazenda
 //implementar futuramente um middleware para verificar se o usuário é um administrador do sistema
-router.post('/registerUserAdm/:id', async (req: Request, res: Response) => {
+router.post('/registerUserAdm/:admId', async (req: Request, res: Response) => {
     const { nomeFzd, cidade, estado, proprietario, email, nomeUser, telefone, senha } = req.body;
-    const { id } = req.params;
+    const { admId } = req.params;
 
     try {
         const adminExists = await prisma.administrador_sistema.findUnique({
-            where: { id }
+            where: { id : admId }
         });
 
         if (!adminExists) {
@@ -59,7 +59,7 @@ router.post('/registerUserAdm/:id', async (req: Request, res: Response) => {
                         proprietario,
                         adm: {
                             connect: {
-                                id: id
+                                id: admId
                             }   
                     }
                 }
